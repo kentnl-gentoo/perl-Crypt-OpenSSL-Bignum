@@ -8,7 +8,7 @@
 #define checkOpenSslCall( result ) if( ! ( result ) ) \
   croak( "OpenSSL error: %s", ERR_reason_error_string( ERR_get_error() ) );
 
-SV * new_obj( SV * p_proto, void* obj )
+SV* new_obj( SV * p_proto, void* obj )
 {
     return sv_2mortal( sv_bless( newRV_noinc( newSViv( (IV)obj ) ),
                                  ( SvROK( p_proto )
@@ -32,11 +32,16 @@ MODULE = Crypt::OpenSSL::Bignum      PACKAGE = Crypt::OpenSSL::Bignum   PREFIX=B
 BOOT:
     ERR_load_crypto_strings();
 
-void _free_BN( BIGNUM* self )
+void
+_free_BN(self)
+    BIGNUM* self;
   CODE:
     BN_clear_free( self );
 
-BIGNUM* new_from_word( SV* p_proto, unsigned long p_word )
+BIGNUM*
+new_from_word(p_proto, p_word)
+    SV* p_proto;
+    unsigned long p_word;
   PREINIT:
     BIGNUM* bn;
   CODE:
@@ -46,7 +51,10 @@ BIGNUM* new_from_word( SV* p_proto, unsigned long p_word )
   OUTPUT:
     RETVAL
 
-BIGNUM* new_from_decimal( SV* p_proto, char* p_dec_string )
+BIGNUM*
+new_from_decimal(p_proto, p_dec_string)
+    SV* p_proto;
+    char* p_dec_string;
   PREINIT:
     BIGNUM* bn;
   CODE:
@@ -56,7 +64,10 @@ BIGNUM* new_from_decimal( SV* p_proto, char* p_dec_string )
   OUTPUT:
     RETVAL
 
-BIGNUM* new_from_hex( SV* p_proto, char* p_hex_string )
+BIGNUM*
+new_from_hex(p_proto, p_hex_string)
+    SV* p_proto;
+    char* p_hex_string;
   PREINIT:
     BIGNUM* bn;
   CODE:
@@ -66,7 +77,10 @@ BIGNUM* new_from_hex( SV* p_proto, char* p_hex_string )
   OUTPUT:
     RETVAL
 
-BIGNUM* new_from_bin( SV* p_proto, SV* p_bin_string_SV )
+BIGNUM*
+new_from_bin(p_proto, p_bin_string_SV)
+    SV* p_proto;
+    SV* p_bin_string_SV;
   PREINIT:
     BIGNUM* bn;
     char* bin;
@@ -78,7 +92,9 @@ BIGNUM* new_from_bin( SV* p_proto, SV* p_bin_string_SV )
   OUTPUT:
     RETVAL
 
-BIGNUM* zero( SV* p_proto )
+BIGNUM*
+zero(p_proto)
+    SV* p_proto;
   PREINIT:
     BIGNUM *bn;
   CODE:
@@ -88,7 +104,9 @@ BIGNUM* zero( SV* p_proto )
   OUTPUT:
     RETVAL
 
-BIGNUM* one( SV* p_proto )
+BIGNUM*
+one(p_proto)
+    SV* p_proto;
   PREINIT:
     BIGNUM *bn;
   CODE:
@@ -100,7 +118,9 @@ BIGNUM* one( SV* p_proto )
 
 
 
-char* to_decimal( BIGNUM* self )
+char*
+to_decimal(self)
+    BIGNUM* self;
   CODE:
     checkOpenSslCall( RETVAL = BN_bn2dec( self ) );
   OUTPUT:
@@ -109,7 +129,9 @@ char* to_decimal( BIGNUM* self )
     OPENSSL_free( RETVAL );
 
 
-char* to_hex( BIGNUM* self )
+char*
+to_hex(self)
+    BIGNUM* self;
   CODE:
     checkOpenSslCall( RETVAL = BN_bn2hex( self ) );
   OUTPUT:
@@ -117,7 +139,9 @@ char* to_hex( BIGNUM* self )
   CLEANUP:
     OPENSSL_free( RETVAL );
 
-SV* to_bin( BIGNUM* self )
+SV*
+to_bin(self)
+    BIGNUM* self;
   PREINIT:
     char* bin;
     int length;
@@ -130,11 +154,16 @@ SV* to_bin( BIGNUM* self )
   OUTPUT:
     RETVAL
 
-unsigned long BN_get_word( BIGNUM* self )
+unsigned long
+BN_get_word(self)
+    BIGNUM* self;
 
 PROTOTYPES: DISABLE
 
-SV* add( BIGNUM* a, BIGNUM* b, ... )
+SV*
+add(a, b, ...)
+    BIGNUM* a;
+    BIGNUM* b;
   PREINIT:
     BIGNUM *bn;
   PPCODE:
@@ -145,7 +174,10 @@ SV* add( BIGNUM* a, BIGNUM* b, ... )
     ST(0) = ( (items < 3 ) ? proto_obj( bn ) : ST(2) );
     XSRETURN(1);
 
-SV* sub( BIGNUM* a, BIGNUM* b, ... )
+SV*
+sub(a, b, ...)
+    BIGNUM* a;
+    BIGNUM* b;
   PREINIT:
     BIGNUM *bn;
   PPCODE:
@@ -156,7 +188,11 @@ SV* sub( BIGNUM* a, BIGNUM* b, ... )
     ST(0) = ( (items < 3 ) ? proto_obj( bn ) : ST(2) );
     XSRETURN(1);
 
-SV* mul( BIGNUM* a, BIGNUM* b, BN_CTX* ctx, ... )
+SV*
+mul(a, b, ctx, ...)
+    BIGNUM* a;
+    BIGNUM* b;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
   PPCODE:
@@ -167,7 +203,11 @@ SV* mul( BIGNUM* a, BIGNUM* b, BN_CTX* ctx, ... )
     ST(0) = ( (items < 4 ) ? proto_obj( bn ) : ST(3) );
     XSRETURN(1);
 
-SV* div( BIGNUM* a, BIGNUM* b, BN_CTX* ctx, ... )
+SV*
+div(a, b, ctx, ...)
+    BIGNUM* a;
+    BIGNUM* b;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* quotient;
     BIGNUM* remainder;
@@ -181,7 +221,10 @@ SV* div( BIGNUM* a, BIGNUM* b, BN_CTX* ctx, ... )
     ST(1) = ( (items < 5 ) ? proto_obj( remainder ) : ST(4) );
     XSRETURN(2);
 
-BIGNUM* sqr( BIGNUM* a, BN_CTX* ctx )
+BIGNUM*
+sqr(a, ctx)
+    BIGNUM* a;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
     SV* p_proto;
@@ -193,7 +236,11 @@ BIGNUM* sqr( BIGNUM* a, BN_CTX* ctx )
   OUTPUT:
     RETVAL
 
-SV* mod( BIGNUM* a, BIGNUM* b, BN_CTX* ctx, ... )
+SV*
+mod(a, b, ctx, ...)
+    BIGNUM* a;
+    BIGNUM* b;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
   PPCODE:
@@ -204,7 +251,12 @@ SV* mod( BIGNUM* a, BIGNUM* b, BN_CTX* ctx, ... )
     ST(0) = ( (items < 4 ) ? proto_obj( bn ) : ST(3) );
     XSRETURN(1);
 
-BIGNUM* mod_mul( BIGNUM* a, BIGNUM* b, BIGNUM* m, BN_CTX* ctx )
+BIGNUM*
+mod_mul(a, b, m, ctx)
+    BIGNUM* a;
+    BIGNUM* b;
+    BIGNUM* m;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
     SV* p_proto;
@@ -216,7 +268,11 @@ BIGNUM* mod_mul( BIGNUM* a, BIGNUM* b, BIGNUM* m, BN_CTX* ctx )
   OUTPUT:
     RETVAL
 
-BIGNUM* exp( BIGNUM* a, BIGNUM* p, BN_CTX* ctx )
+BIGNUM*
+exp(a, p, ctx)
+    BIGNUM* a;
+    BIGNUM* p;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
     SV* p_proto;
@@ -228,7 +284,12 @@ BIGNUM* exp( BIGNUM* a, BIGNUM* p, BN_CTX* ctx )
   OUTPUT:
     RETVAL
 
-BIGNUM* mod_exp( BIGNUM* a, BIGNUM* p, BIGNUM* m, BN_CTX* ctx )
+BIGNUM*
+mod_exp(a, p, m, ctx)
+    BIGNUM* a;
+    BIGNUM* p;
+    BIGNUM* m;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
     SV* p_proto;
@@ -240,7 +301,11 @@ BIGNUM* mod_exp( BIGNUM* a, BIGNUM* p, BIGNUM* m, BN_CTX* ctx )
   OUTPUT:
     RETVAL
 
-BIGNUM* mod_inverse( BIGNUM* a, BIGNUM* n, BN_CTX* ctx )
+BIGNUM*
+mod_inverse(a, n, ctx)
+    BIGNUM* a;
+    BIGNUM* n;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
     SV* p_proto;
@@ -252,7 +317,11 @@ BIGNUM* mod_inverse( BIGNUM* a, BIGNUM* n, BN_CTX* ctx )
   OUTPUT:
     RETVAL
 
-BIGNUM* gcd( BIGNUM* a, BIGNUM* b, BN_CTX* ctx )
+BIGNUM*
+gcd(a, b, ctx)
+    BIGNUM* a;
+    BIGNUM* b;
+    BN_CTX* ctx;
   PREINIT:
     BIGNUM* bn;
     SV* p_proto;
@@ -264,15 +333,26 @@ BIGNUM* gcd( BIGNUM* a, BIGNUM* b, BN_CTX* ctx )
   OUTPUT:
     RETVAL
 
-int BN_cmp( BIGNUM* a, BIGNUM* b )
+int
+BN_cmp(a, b)
+    BIGNUM* a;
+    BIGNUM* b;
 
-int BN_is_zero( BIGNUM* a )
+int
+BN_is_zero(a)
+    BIGNUM* a;
 
-int BN_is_one( BIGNUM* a )
+int
+BN_is_one(a)
+    BIGNUM* a;
 
-int BN_is_odd( BIGNUM* a )
+int
+BN_is_odd(a)
+    BIGNUM* a;
 
-BIGNUM* copy( BIGNUM* a )
+BIGNUM*
+copy(a)
+    BIGNUM* a;
   PREINIT:
     SV* p_proto;
   CODE:
@@ -281,7 +361,9 @@ BIGNUM* copy( BIGNUM* a )
   OUTPUT:
     RETVAL
 
-IV pointer_copy( BIGNUM* a )
+IV
+pointer_copy(a)
+    BIGNUM* a;
   PREINIT:
   CODE:
     checkOpenSslCall( RETVAL = (IV) BN_dup(a) );
@@ -290,9 +372,13 @@ IV pointer_copy( BIGNUM* a )
 
 MODULE = Crypt::OpenSSL::Bignum  PACKAGE = Crypt::OpenSSL::Bignum::CTX PREFIX=BN_CTX_
 
-BN_CTX* BN_CTX_new( SV* p_proto );
+BN_CTX*
+BN_CTX_new(p_proto)
+    SV* p_proto;
   C_ARGS:
 
-void _free_BN_CTX( BN_CTX* self )
+void
+_free_BN_CTX(self)
+    BN_CTX* self;
   CODE:
     BN_CTX_free( self );
