@@ -2,16 +2,12 @@ use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
-    'NAME'		=> 'Crypt::OpenSSL::Bignum',
-    'VERSION_FROM'	=> 'Bignum.pm', # finds $VERSION
-    'PREREQ_PM'		=> {}, # e.g., Module::Name => 1.1
-    ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM => 'Bignum.pm', # retrieve abstract from module
-       AUTHOR     => 'A. U. Thor <a.u.thor@a.galaxy.far.far.away>') : ()),
-    'LIBS'	=> ['-lssl'],   # e.g., '-lm'
-    'DEFINE'		=> '', # e.g., '-DHAVE_SOMETHING'
-	# Insert -I. if you add *.h files later:
-    'INC'		=> '', # e.g., '-I/usr/include/other'
-	# Un-comment this if you add C files to link with later:
-    # 'OBJECT'		=> '$(O_FILES)', # link all the C files too
+    'NAME'              => 'Crypt::OpenSSL::Bignum',
+    'VERSION_FROM'      => 'Bignum.pm',
+    'PREREQ_PM'         => {},
+    'ABSTRACT_FROM'     => 'Bignum.pm', # retrieve abstract from module
+    'AUTHOR'            => 'Ian Robertson <iroberts@cpan.org>',
+    'LIBS'              => ['-lcrypto'],   # e.g., '-lm'
+    'DEFINE'            => '-DPERL5',   # perl-5.8/gcc-3.2 needs this
+    'INC'               => '',
 );
