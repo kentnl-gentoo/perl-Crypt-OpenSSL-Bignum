@@ -1,0 +1,6 @@
+Revision history for Perl extension Crypt::OpenSSL::Bignum.
+
+0.01  Sat Sep 28 08:15:43 2002
+	- original version; created by h2xs 1.21 with options
+		-n Crypt::OpenSSL::Bignum
+
