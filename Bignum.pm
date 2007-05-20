@@ -10,7 +10,7 @@ require DynaLoader;
 
 @ISA = qw(DynaLoader);
 
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 bootstrap Crypt::OpenSSL::Bignum $VERSION;
 
@@ -191,7 +191,7 @@ Crypt::OpenSSL::Bignum object is created for the return value;
 otherwise, the value of third argument is set to the result and
 returned.
 
-=item mul
+=item div
 
 This method returns a list consisting of quotient and the remainder
 obtained by dividing this object by the first argument, using the
@@ -201,6 +201,18 @@ Crypt::OpenSSL::Bignum objects is created for both return values.  If
 a third argument is passed, otherwise, the value of third argument is
 set to the quotient.  If a fourth argument is passed, the value of the
 fourth argument is set to the remainder.
+
+=item exp
+
+This method returns the product of this object exponeniated by the
+first argument, using the second argument, a
+Crypt::OpenSSL::Bignum::CTX object, as a scratchpad.
+
+=item mod_exp
+
+This method returns the product of this object exponeniated by the
+first argument, modulo the second argument, using the third argument, a
+Crypt::OpenSSL::Bignum::CTX object, as a scratchpad.
 
 =item pointer_copy
 
