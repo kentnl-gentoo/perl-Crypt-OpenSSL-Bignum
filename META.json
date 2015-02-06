@@ -36,11 +36,11 @@
          }
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "repository" : {
          "url" : "https://github.com/kmx/perl-Crypt-OpenSSL-Bignum"
       }
    },
-   "version" : "0.05_01"
+   "version" : "0.06"
 }
